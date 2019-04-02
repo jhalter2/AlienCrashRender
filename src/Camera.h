@@ -36,15 +36,13 @@ public:
 	void TiltUpDown(float ang);
 	void TurnLeftRight(float ang);
 
-	// Why no SETS for Pos, Dir, Up, LookAt and Right?
-	//   They have to be adjusted _together_ in setOrientAndPosition()
 
-private:  // methods should never be public
+private: 
 	void privUpdateProjectionMatrix(void);
 	void privUpdateViewMatrix(void);
 
 
-private:  // data  (Keep it private)
+private:
 
 		  // Projection Matrix
 	Matrix	projMatrix;
