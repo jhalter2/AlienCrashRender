@@ -13,11 +13,11 @@ class ShaderMultiPointlight : public ShaderBase
 {
 
 public:
-	ShaderMultiPointlight(const ShaderMultiPointlight&) = delete;				 // Copy constructor
-	ShaderMultiPointlight(ShaderMultiPointlight&&) = default;                    // Move constructor
-	ShaderMultiPointlight& operator=(const ShaderMultiPointlight&) & = default;  // Copy assignment operator
-	ShaderMultiPointlight& operator=(ShaderMultiPointlight&&) & = default;       // Move assignment operator
-	~ShaderMultiPointlight();		  							         // Destructor
+	ShaderMultiPointlight(const ShaderMultiPointlight&) = delete;
+	ShaderMultiPointlight(ShaderMultiPointlight&&) = default;
+	ShaderMultiPointlight& operator=(const ShaderMultiPointlight&) & = default;
+	ShaderMultiPointlight& operator=(ShaderMultiPointlight&&) & = default;
+	~ShaderMultiPointlight();
 
 	ShaderMultiPointlight(ID3D11Device* device);
 
