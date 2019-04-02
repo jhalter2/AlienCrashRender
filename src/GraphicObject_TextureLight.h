@@ -12,11 +12,11 @@ class Texture;
 class GraphicObject_TextureLight : public GraphicObject_Base
 {
 public:
-	GraphicObject_TextureLight(const GraphicObject_TextureLight&) = delete;				 // Copy constructor
-	GraphicObject_TextureLight(GraphicObject_TextureLight&&) = default;                    // Move constructor
-	GraphicObject_TextureLight& operator=(const GraphicObject_TextureLight&) & = default;  // Copy assignment operator
-	GraphicObject_TextureLight& operator=(GraphicObject_TextureLight&&) & = default;       // Move assignment operator
-	~GraphicObject_TextureLight();		  											 // Destructor
+	GraphicObject_TextureLight(const GraphicObject_TextureLight&) = delete;
+	GraphicObject_TextureLight(GraphicObject_TextureLight&&) = default;
+	GraphicObject_TextureLight& operator=(const GraphicObject_TextureLight&) & = default; 
+	GraphicObject_TextureLight& operator=(GraphicObject_TextureLight&&) & = default;  
+	~GraphicObject_TextureLight();		  
 
 	GraphicObject_TextureLight() = delete;
 
