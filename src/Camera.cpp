@@ -13,7 +13,7 @@ void Camera::setPerspective(const float Fovy, const float Aspect, const float Ne
 
 void Camera::setOrientAndPosition(const Vect &inUp, const Vect &inLookAt, const Vect &inPos)
 {
-	// Remember the up, dir and right are unit length, and are perpendicular.
+	//up, dir and right are unit length, and are perpendicular.
 	// Treat lookAt as king, find Right vect, then correct Up to insure perpendiculare.
 	// Make sure that all vectors are unit vectors.
 
@@ -57,7 +57,7 @@ void Camera::privUpdateProjectionMatrix(void)
 	this->projMatrix[m14] = (-2.0f * this->farDist * this->nearDist) / (this->farDist - this->nearDist);
 	this->projMatrix[m15] = 0.0f;
 
-	// Converting from OpenGL-style NDC of [-1,1] to DX's [0,1].  See note: https://anteru.net/blog/2011/12/27/1830/
+	// Converting from OpenGL-style NDC of [-1,1] to DX's [0,1]
 	// (Note: NDCConvert should be precomputed once and stored for reuse)
 	Matrix B(TRANS, 0, 0, 1.0f);
 	Matrix S(SCALE, 1, 1, 0.5f);
