@@ -1,6 +1,3 @@
-// ShaderBase
-// AB, June 2016
-
 #ifndef _ShaderBase
 #define _ShaderBase
 
@@ -45,10 +42,10 @@ protected:
 	void SetToContext_VS_PS_InputLayout();
 
 public:
-	ShaderBase(const ShaderBase&) = delete;				  // Copy constructor
-	ShaderBase(ShaderBase&&) = delete;                    // Move constructor
-	ShaderBase& operator=(const ShaderBase&) & = delete;  // Copy assignment operator
-	ShaderBase& operator=(ShaderBase&&) & = delete;       // Move assignment operator
+	ShaderBase(const ShaderBase&) = delete;	
+	ShaderBase(ShaderBase&&) = delete; 
+	ShaderBase& operator=(const ShaderBase&) & = delete;
+	ShaderBase& operator=(ShaderBase&&) & = delete; 
 	ShaderBase() = delete;
 	virtual ~ShaderBase();
 
