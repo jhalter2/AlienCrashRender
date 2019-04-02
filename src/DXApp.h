@@ -1,8 +1,3 @@
-// DXApp
-// Andre Berthiaume, June 2016
-// Note: DX 11 SDK https://www.microsoft.com/en-us/download/details.aspx?id=6812
-// Note on weird stuff with swap chain (1s and 2s) https://msdn.microsoft.com/en-us/library/windows/desktop/jj863687(v=vs.85).aspx
-
 #ifndef _DXApp
 #define _DXApp
 
@@ -42,11 +37,11 @@ private:
 	Vect BackgroundColor;
 
 	// DX application elements
-	ID3D11Device* md3dDevice;					// Connects to the graphics card
-	ID3D11DeviceContext* md3dImmediateContext;	// Settings for the GPU to use
-	IDXGISwapChain* mSwapChain;					// image buffers used for rendering
-	ID3D11RenderTargetView* mRenderTargetView;	// Where to send rendring operations (typically: points to one of the swap buffers)
-	ID3D11DepthStencilView* mpDepthStencilView; // Needed to force depth-buffer operations
+	ID3D11Device* md3dDevice;
+	ID3D11DeviceContext* md3dImmediateContext;
+	IDXGISwapChain* mSwapChain;
+	ID3D11RenderTargetView* mRenderTargetView;
+	ID3D11DepthStencilView* mpDepthStencilView; 
 
 	GameTimer mTimer;
 	std::wstring mMainWndCaption;
@@ -59,7 +54,6 @@ private:
 	void DrawScene();
 	void CalculateFrameStats();
 
-	// Shader loading utility. SHould be moved elsewhere later...
 	HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 
 	// Debug utility
@@ -104,7 +98,6 @@ private:
 	Texture* pTex6;
 
 	Vect EarthTrans;
-	// gimmicky mouse control
 	Vect MousePos;		
 	float mTheta;
 	float mPhi;
