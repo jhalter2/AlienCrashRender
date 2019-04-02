@@ -1,6 +1,4 @@
 #include "ModelTools.h"
-//#include "Enum.h"
-//#include <math.h>
 #include "Matrix.h"
 #include <assert.h>
 #include "Model.h"
