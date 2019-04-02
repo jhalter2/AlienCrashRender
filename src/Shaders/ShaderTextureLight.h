@@ -13,11 +13,11 @@ class ShaderTextureLight : public ShaderBase
 {
 
 public:
-	ShaderTextureLight(const ShaderTextureLight&) = delete;				 // Copy constructor
-	ShaderTextureLight(ShaderTextureLight&&) = default;                    // Move constructor
-	ShaderTextureLight& operator=(const ShaderTextureLight&) & = default;  // Copy assignment operator
-	ShaderTextureLight& operator=(ShaderTextureLight&&) & = default;       // Move assignment operator
-	~ShaderTextureLight();		  							         // Destructor
+	ShaderTextureLight(const ShaderTextureLight&) = delete;	
+	ShaderTextureLight(ShaderTextureLight&&) = default; 
+	ShaderTextureLight& operator=(const ShaderTextureLight&) & = default;
+	ShaderTextureLight& operator=(ShaderTextureLight&&) & = default; 
+	~ShaderTextureLight();
 
 	ShaderTextureLight(ID3D11Device* device);
 
