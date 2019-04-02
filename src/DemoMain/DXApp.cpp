@@ -183,7 +183,6 @@ void DXApp::DrawScene()
 	//send the cam info and set to context
 	pShaderMultiLight->PrepareRender(md3dImmediateContext, mCam.getViewMatrix(), mCam.getProjMatrix(), eyepos);
 
-	//streamlined rendering
 	//need different blue fog for planet
 	pShaderMultiLight->SetFogParameters(10000.0f, 25.0f, Vect(0.0f, 0.0f, 0.0f));
 	pShaderMultiLight->SendFogParameters();
@@ -294,13 +293,11 @@ DXApp::~DXApp()
 	ReleaseAndDeleteCOMobject(md3dDevice);
 }
 
-// See http://masterkenth.com/directx-leak-debugging/
 void DXApp::ReportLiveDXObjects()
 {
 #ifdef _DEBUG
 	HRESULT hr = S_OK;
 
-	// Now we set up the Debug interface, to be queried on shutdown
 	ID3D11Debug* debugDev;
 	hr = md3dDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debugDev));
 
@@ -318,14 +315,9 @@ void DXApp::InitDirect3D()
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	// This is a *greatly* simplified process to create a DX device and context:
-	// We force the use of DX11 feature level since that's what CDM labs are limited to.
-	// For real-life applications would need to test what's the best feature level and act accordingly
 	hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, nullptr, 0, D3D11_SDK_VERSION, &md3dDevice, nullptr, &md3dImmediateContext);
 	assert(SUCCEEDED(hr));
 
-	// Now we obtain the associated DXGIfactory1 with our device 
-	// Many steps...
 	IDXGIDevice* dxgiDevice = nullptr;
 	hr = md3dDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
 	assert(SUCCEEDED(hr));
@@ -337,32 +329,25 @@ void DXApp::InitDirect3D()
 	IDXGIFactory1* dxgiFactory1 = nullptr;
 	hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&dxgiFactory1));
 	assert(SUCCEEDED(hr));
-	// See also note on weird stuff with factories and swap chains (1s and 2s)
-	// https://msdn.microsoft.com/en-us/library/windows/desktop/jj863687(v=vs.85).aspx
 
-	// We are done with these now...
 	ReleaseAndDeleteCOMobject(adapter);
 	ReleaseAndDeleteCOMobject(dxgiDevice);
 
 	// Controls MSAA option:
 	// - 4x count level garanteed for all DX11 
 	// - MUST be the same for depth buffer!
-	// - We _need_ to work with the depth buffer because reasons... (see below)
 	DXGI_SAMPLE_DESC sampDesc;
 	sampDesc.Count = 1;
-	sampDesc.Quality = static_cast<UINT>(D3D11_CENTER_MULTISAMPLE_PATTERN);  // MS: what's with the type mismtach?
-
-	DXGI_MODE_DESC buffdesc;				// https://msdn.microsoft.com/en-us/library/windows/desktop/bb173064(v=vs.85).aspx
+	sampDesc.Quality = static_cast<UINT>(D3D11_CENTER_MULTISAMPLE_PATTERN);
+	DXGI_MODE_DESC buffdesc;
 	ZeroMemory(&buffdesc, sizeof(buffdesc));
 	buffdesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	// Next we create a swap chain. 
-	// Useful thread: http://stackoverflow.com/questions/27270504/directx-creating-the-swapchain
-	// Note that this is for a DirectX 11.0: in a real app, we should test the feature levels and act accordingly
+	// Next create
 
-	DXGI_SWAP_CHAIN_DESC sd;				// See MSDN: https://msdn.microsoft.com/en-us/library/windows/desktop/bb173075(v=vs.85).aspx
+	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
-	sd.BufferCount = 2;						// Much confusion about this number... see http://www.gamedev.net/topic/633807-swap-chain-buffer-count/
+	sd.BufferCount = 2;	
 	sd.BufferDesc = buffdesc;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.OutputWindow = mhMainWnd;
@@ -384,9 +369,8 @@ void DXApp::InitDirect3D()
 
 	/**********************************************************/
 
-	// First we fix what it means for triangles to be front facing.
+	// First fix what it means for triangles to be front facing.
 	// Requires setting a whole new rasterizer state
-	//*
 	D3D11_RASTERIZER_DESC rd;
 	//rd.FillMode = D3D11_FILL_WIREFRAME;  // Also: D3D11_FILL_WIREFRAME
 	rd.FillMode = D3D11_FILL_SOLID;
@@ -397,20 +381,15 @@ void DXApp::InitDirect3D()
 	rd.DepthBiasClamp = 0.0f;
 	rd.DepthClipEnable = true;
 	rd.ScissorEnable = false;
-	rd.MultisampleEnable = true;  // Does not in fact turn on/off multisample: https://msdn.microsoft.com/en-us/library/windows/desktop/ff476198(v=vs.85).aspx
+	rd.MultisampleEnable = true;  
 	rd.AntialiasedLineEnable = true;
 
 	ID3D11RasterizerState* rs;
 	md3dDevice->CreateRasterizerState(&rd, &rs);
 
 	md3dImmediateContext->RSSetState(rs);
-	ReleaseAndDeleteCOMobject(rs); // we can release this resource since we won't be changing it any further
-	//*/
+	ReleaseAndDeleteCOMobject(rs); //release this resource since it won't be changing  any further
 
-	// We must turn on the abilty to process depth during rendering.
-	// Done through depth stencils (see https://msdn.microsoft.com/en-us/library/windows/desktop/bb205074(v=vs.85).aspx)
-	// Below is a simplified version
-	//*
 	D3D11_TEXTURE2D_DESC descDepth;
 	descDepth.Width = mClientWidth;
 	descDepth.Height = mClientHeight;
@@ -437,9 +416,6 @@ void DXApp::InitDirect3D()
 	hr = md3dDevice->CreateDepthStencilView(pDepthStencil, &descDSV, &mpDepthStencilView);
 	assert(SUCCEEDED(hr));
 	ReleaseAndDeleteCOMobject(pDepthStencil);
-	//*/
-
-	/**********************************************************/
 
 	//md3dImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);  // to use without depth stencil
 	md3dImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mpDepthStencilView);
@@ -457,9 +433,6 @@ void DXApp::InitDirect3D()
 
 void DXApp::CalculateFrameStats()
 {
-	// Code computes the average frames per second, and also the 
-	// average time it takes to render one frame.  These stats 
-	// are appended to the window caption bar.
 
 	static int frameCnt = 0;
 	static float timeElapsed = 0.0f;
@@ -496,7 +469,6 @@ void DXApp::FrameTick()
 
 void DXApp::OnMouseDown(WPARAM btnState, int xval, int yval)
 {
-	// Gimmicky mouse control
 	if (btnState & MK_LBUTTON)
 	{
 		MousePos[x] = static_cast<float>(xval);
@@ -513,7 +485,6 @@ void DXApp::OnMouseUp(WPARAM btnState, int xval, int yval)
 
 void DXApp::OnMouseMove(WPARAM btnState, int xval, int yval)
 {
-	// Gimmicky mouse control
 	if (btnState & MK_LBUTTON)
 	{
 		float dx = 0.01f*(MousePos[x] - xval);
@@ -553,22 +524,14 @@ void  DXApp::OnMouseWheel(short delta)
 	}
 }
 
-
-// Shader loading utility. Will be moved elsewhere later...
-// Needs to be moved. Requires
 HRESULT DXApp::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
 	HRESULT hr = S_OK;
 
 	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
-	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-	// Setting this flag improves the shader debugging experience, but still allows 
-	// the shaders to be optimized and to run exactly the way they will run in 
-	// the release configuration of this program.
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 
-	// Disable optimizations to further improve shader debugging
 	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
