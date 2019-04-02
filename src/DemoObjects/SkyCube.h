@@ -15,10 +15,10 @@ private:
 	Model* pBox;
 
 public:
-	SkyCube(const SkyCube&) = delete;				// Copy constructor
-	SkyCube(Model&&) = delete;						// Move constructor
-	SkyCube& operator=(const SkyCube&) & = delete;  // Copy assignment operator
-	SkyCube& operator=(SkyCube&&) & = delete;       // Move assignment operator
+	SkyCube(const SkyCube&) = delete;
+	SkyCube(Model&&) = delete;
+	SkyCube& operator=(const SkyCube&) & = delete;
+	SkyCube& operator=(SkyCube&&) & = delete;
 	~SkyCube();
 
 	SkyCube(ID3D11Device* dev, ShaderTexture* shader, Texture* tex, float len);
