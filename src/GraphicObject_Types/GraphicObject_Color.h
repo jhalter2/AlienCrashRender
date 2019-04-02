@@ -1,6 +1,3 @@
-// GraphicObject_Color
-// Andre Berthiaume, July 2016
-
 #ifndef _GraphicObject_Color
 #define _GraphicObject_Color
 
