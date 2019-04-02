@@ -1,6 +1,3 @@
-// GraphicObject
-// Andre Berthiaume, July 2016
-
 #ifndef _GraphicObject_Base
 #define _GraphicObject_Base
 
