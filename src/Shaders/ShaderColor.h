@@ -1,6 +1,3 @@
-// ShaderColor
-// Andre Berthiaume, july 2016
-
 #ifndef _ShaderColor
 #define _ShaderColor
 
@@ -13,11 +10,11 @@ struct ID3D11Device;
 class ShaderColor : public ShaderBase
 {
 public:
-	ShaderColor(const ShaderColor&) = delete;				 // Copy constructor
-	ShaderColor(ShaderColor&&) = default;                    // Move constructor
-	ShaderColor& operator=(const ShaderColor&) & = default;  // Copy assignment operator
-	ShaderColor& operator=(ShaderColor&&) & = default;       // Move assignment operator
-	~ShaderColor();		  							         // Destructor
+	ShaderColor(const ShaderColor&) = delete;
+	ShaderColor(ShaderColor&&) = default;
+	ShaderColor& operator=(const ShaderColor&) & = default;
+	ShaderColor& operator=(ShaderColor&&) & = default;
+	~ShaderColor();	
 
 	ShaderColor(ID3D11Device* device);
 
