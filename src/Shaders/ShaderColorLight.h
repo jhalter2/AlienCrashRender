@@ -1,6 +1,3 @@
-// ShaderColorLight
-// Andre Berthiaume, Feb 2017
-
 #ifndef _ShaderColorLight
 #define _ShaderColorLight
 
@@ -14,11 +11,11 @@ class ShaderColorLight : public ShaderBase
 {
 
 public:
-	ShaderColorLight(const ShaderColorLight&) = delete;				 // Copy constructor
-	ShaderColorLight(ShaderColorLight&&) = default;                    // Move constructor
-	ShaderColorLight& operator=(const ShaderColorLight&) & = default;  // Copy assignment operator
-	ShaderColorLight& operator=(ShaderColorLight&&) & = default;       // Move assignment operator
-	~ShaderColorLight();		  							         // Destructor
+	ShaderColorLight(const ShaderColorLight&) = delete;
+	ShaderColorLight(ShaderColorLight&&) = default; 
+	ShaderColorLight& operator=(const ShaderColorLight&) & = default;
+	ShaderColorLight& operator=(ShaderColorLight&&) & = default; 
+	~ShaderColorLight();
 
 	ShaderColorLight(ID3D11Device* device);
 
