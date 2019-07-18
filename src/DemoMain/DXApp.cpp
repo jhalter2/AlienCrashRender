@@ -215,11 +215,11 @@ void DXApp::DrawScene()
 	pPyr1->SetWorld(PyramidWorld3);
 	pPyr1->Render();
 
-	//Render skybox
+	//render skybox
 	pShaderTex->PrepareRender(md3dImmediateContext, mCam.getViewMatrix(), mCam.getProjMatrix());
 	pSkyBox->Render();
 
-	// Switches the display to show the now-finished back-buffer
+	//switches the display to show the now-finished back-buffer
 	mSwapChain->Present(0, 0);
 }
 
@@ -236,25 +236,25 @@ DXApp::DXApp(HWND hwnd)
 	mSwapChain = nullptr;
 	mRenderTargetView = nullptr;
 
-	// Get window data through the window handle
+	//get window data through the window handle
 	RECT rc;
 	BOOL err = GetClientRect(mhMainWnd, &rc);  // Seriously MS: Redifining BOOL as int? Confusing much?
 	assert(err);
 
-	// get width/hight
+	//get width/hight
 	mClientWidth = rc.right - rc.left;
 	mClientHeight = rc.bottom - rc.top;
 
-	// Get window caption
+	//get window caption
 	const int MAX_LABEL_LENGTH = 100; // probably overkill...
 	WCHAR str[MAX_LABEL_LENGTH];
 	GetWindowText(mhMainWnd, str, MAX_LABEL_LENGTH);
 	mMainWndCaption = str;
 
-	// Initialize DX11
+	//initialize DX11
 	this->InitDirect3D();
 
-	// Demo initialization
+	//demo initialization
 	this->InitDemo();
 }
 
@@ -287,8 +287,8 @@ DXApp::~DXApp()
 	ReleaseAndDeleteCOMobject(mSwapChain);
 	ReleaseAndDeleteCOMobject(md3dImmediateContext);
 
-	// Must be done BEFORE the device is released
-	ReportLiveDXObjects();		// See http://masterkenth.com/directx-leak-debugging/
+	//must be done BEFORE the device is released
+	ReportLiveDXObjects();		//see http://masterkenth.com/directx-leak-debugging/ for details
 
 	ReleaseAndDeleteCOMobject(md3dDevice);
 }
@@ -333,9 +333,9 @@ void DXApp::InitDirect3D()
 	ReleaseAndDeleteCOMobject(adapter);
 	ReleaseAndDeleteCOMobject(dxgiDevice);
 
-	// Controls MSAA option:
-	// - 4x count level garanteed for all DX11 
-	// - MUST be the same for depth buffer!
+	//controls MSAA option:
+	//4x count level garanteed for all DX11 
+	//MUST be the same for depth buffer!
 	DXGI_SAMPLE_DESC sampDesc;
 	sampDesc.Count = 1;
 	sampDesc.Quality = static_cast<UINT>(D3D11_CENTER_MULTISAMPLE_PATTERN);
@@ -343,7 +343,7 @@ void DXApp::InitDirect3D()
 	ZeroMemory(&buffdesc, sizeof(buffdesc));
 	buffdesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	// Next create
+	//next create
 
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
@@ -358,7 +358,7 @@ void DXApp::InitDirect3D()
 	assert(SUCCEEDED(hr));
 	ReleaseAndDeleteCOMobject(dxgiFactory1);
 
-	// Create a render target view		https://msdn.microsoft.com/en-us/library/windows/desktop/ff476582(v=vs.85).aspx
+	//create a render target view		https://msdn.microsoft.com/en-us/library/windows/desktop/ff476582(v=vs.85).aspx
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
 	assert(SUCCEEDED(hr));;
@@ -367,15 +367,13 @@ void DXApp::InitDirect3D()
 	ReleaseAndDeleteCOMobject(pBackBuffer);
 	assert(SUCCEEDED(hr));
 
-	/**********************************************************/
-
-	// First fix what it means for triangles to be front facing.
-	// Requires setting a whole new rasterizer state
+	//first fix what it means for triangles to be front facing.
+	//requires setting a whole new rasterizer state
 	D3D11_RASTERIZER_DESC rd;
 	//rd.FillMode = D3D11_FILL_WIREFRAME;  // Also: D3D11_FILL_WIREFRAME
 	rd.FillMode = D3D11_FILL_SOLID;
 	rd.CullMode = D3D11_CULL_BACK;
-	rd.FrontCounterClockwise = true; // true for RH forward facing
+	rd.FrontCounterClockwise = true; //true for RH forward facing
 	rd.DepthBias = 0;
 	rd.SlopeScaledDepthBias = 0.0f;
 	rd.DepthBiasClamp = 0.0f;
@@ -420,7 +418,7 @@ void DXApp::InitDirect3D()
 	//md3dImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, nullptr);  // to use without depth stencil
 	md3dImmediateContext->OMSetRenderTargets(1, &mRenderTargetView, mpDepthStencilView);
 
-	// Setup the viewport
+	//setup the viewport
 	D3D11_VIEWPORT vp;
 	vp.Width = (FLOAT)mClientWidth;
 	vp.Height = (FLOAT)mClientHeight;
@@ -439,7 +437,7 @@ void DXApp::CalculateFrameStats()
 
 	frameCnt++;
 
-	// Compute averages over one second period.
+	//compute averages over one second period.
 	if ((mTimer.TotalTime() - timeElapsed) >= 1.0f)
 	{
 		float fps = (float)frameCnt; // fps = frameCnt / 1
@@ -452,7 +450,7 @@ void DXApp::CalculateFrameStats()
 			<< L"Frame Time: " << mspf << L" (ms)";
 		SetWindowText(mhMainWnd, outs.str().c_str());
 
-		// Reset for next average.
+		//reset for next average.
 		frameCnt = 0;
 		timeElapsed += 1.0f;
 	}
@@ -490,7 +488,7 @@ void DXApp::OnMouseMove(WPARAM btnState, int xval, int yval)
 		float dx = 0.01f*(MousePos[x] - xval);
 		float dy = 0.01f*(MousePos[y] - yval);
 
-		// Update angles based on input to orbit camera around box.
+		//update angles based on input to orbit camera around box.
 		mTheta += dx;
 		mPhi -= dy;
 
@@ -501,7 +499,7 @@ void DXApp::OnMouseMove(WPARAM btnState, int xval, int yval)
 		else if (mPhi < -verticalMax)
 			mPhi = -verticalMax;
 
-		// Build the view matrix using gimmicky trick
+		//build the view matrix using gimmicky trick
 		Vect target = Vect(0, 0, 0, 0);
 		Vect up = Vect(0, 1, 0, 0);
 		Vect pos = Vect(0, 0, -mRadius) * Matrix(ROT_Y, mTheta) * Matrix(ROT_X, mPhi);
